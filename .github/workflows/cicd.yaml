@@ -1,12 +1,20 @@
 name: Github CI/CD R&D
 on:
-  push:
-    pull_request:
+  pull_request:
+    # https://stackoverflow.com/a/70767151/2190689
     branches:
-      - master
+      - main
+      - dev
+  push:
+    branches:
+      # https://stackoverflow.com/a/57903434/2190689
+      #- '*'         # matches every branch that doesn't contain a '/'
+      #- '*/*'       # matches every branch containing a single '/'
+      #- '**'        # matches every branch
+      #- '!master'   # excludes master
+      - main
       - qa
       - dev
-      - main
     tags:
       - v*
   workflow_dispatch:
