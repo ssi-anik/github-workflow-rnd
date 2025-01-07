@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - dev
+      - qa
   push:
     branches:
       # https://stackoverflow.com/a/57903434/2190689
