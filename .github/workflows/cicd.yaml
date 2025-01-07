@@ -10,12 +10,11 @@ on:
       # https://stackoverflow.com/a/57903434/2190689
       #- '*'         # matches every branch that doesn't contain a '/'
       #- '*/*'       # matches every branch containing a single '/'
-      - '**'        # matches every branch
+      #- '**'        # matches every branch
       #- '!master'   # excludes master
-#      - master
-#      - qa
-#      - dev
-#      - main
+      - main
+      - qa
+      - dev
     tags:
       - v*
   workflow_dispatch:
