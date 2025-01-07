@@ -22,8 +22,17 @@ jobs:
       - name: Checkout to codebase
         uses: actions/checkout@v4
 
-      - name: echo ref
+      - name: Echo Github ref
         run: echo ${{ github.ref }}
+
+      - name: Echo Github base ref
+        run: echo ${{ github.base_ref }}
+
+      - name: Echo Github head ref
+        run: echo ${{ github.head_ref }}
+
+      - name: Echo Github ref name
+        run: echo ${{ github.ref_name }}
 
 #      - name: Set environment
 #        id: set_environment
