@@ -1,0 +1,47 @@
+name: Github CI/CD R&D
+on:
+  push:
+    pull_request:
+    branches:
+      - master
+      - qa
+      - dev
+      - main
+    tags:
+      - v*
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout to codebase
+        uses: actions/checkout@v4
+
+#      - name: Set environment
+#        id: set_environment
+#        run: |
+#          echo ::set-output name=name::`node ./scripts/get-release-name.js ${{ github.run_number }}`
+#
+#
+#      - name: Check
+#        run: |
+#          ./printer.sh "hello"
+#        env:
+#          APP_MIN_HEIGHT: ${{ secrets.APP_MIN_HEIGHT }}
+#          APP_MIN_WIDTH: ${{ secrets.APP_MIN_WIDTH }}
+#          APP_TITLE: ${{ secrets.APP_TITLE }}
+#          BASE_URL_FOR_REMOTE_HOST: ${{ secrets.BASE_URL_FOR_REMOTE_HOST }}
+#          REACT_APP_APP_TITLE: ${{ secrets.REACT_APP_APP_TITLE }}
+#          REACT_APP_BUG_REPORT_URL: ${{ secrets.REACT_APP_BUG_REPORT_URL }}
+#          REACT_APP_COUNTER_API_TAG: ${{ secrets.REACT_APP_COUNTER_API_TAG }}
+#          REACT_APP_ENABLE_LOG: ${{ secrets.REACT_APP_ENABLE_LOG }}
+#          REACT_APP_PING_SERVER_TIMEOUT: ${{ secrets.REACT_APP_PING_SERVER_TIMEOUT }}
+#          REACT_APP_RELEASE_ASSET_URL: ${{ secrets.REACT_APP_RELEASE_ASSET_URL }}
+#          REACT_APP_SETTINGS_HOST: ${{ secrets.REACT_APP_SETTINGS_HOST }}
+#          REACT_APP_SETTINGS_PATH: ${{ secrets.REACT_APP_SETTINGS_PATH }}
+#          REACT_APP_SPLASH_SCREEN_TIMEOUT: ${{ secrets.REACT_APP_SPLASH_SCREEN_TIMEOUT }}
