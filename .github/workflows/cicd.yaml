@@ -46,14 +46,14 @@ jobs:
         run: |
           if [[ "${{ github.ref_type }}" == 'tag' ]]; then
             echo ::set-output name=ENVIRONMENT_NAME::production
-          elif [[ "${{ github.ref_name }}" == 'main' || ${{ github.ref_name }} == 'qa' ]]; then
+          elif [[ "${{ github.ref_name }}" == 'main' || "${{ github.ref_name }}" == 'qa' ]]; then
             echo ::set-output name=ENVIRONMENT_NAME::production
-          elif [[ "${{ github.ref_name }}" == 'main' == 'dev' ]]; then
+          elif [[ "${{ github.ref_name }}" == 'dev' ]]; then
             echo ::set-output name=ENVIRONMENT_NAME::develop
-          elif [[ "${{ github.ref_name }}" == 'main' == 'uat' ]]; then
+          elif [[ "${{ github.ref_name }}" == 'uat' ]]; then
             echo ::set-output name=ENVIRONMENT_NAME::uat
           else
-            echo ::set-output name=name::test
+            echo ::set-output name=ENVIRONMENT_NAME::test
           fi
 
           echo ${{ steps.set_environment.outputs.ENVIRONMENT_NAME }}
