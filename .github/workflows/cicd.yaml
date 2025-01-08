@@ -56,7 +56,9 @@ jobs:
             echo ::set-output name=ENVIRONMENT_NAME::test
           fi
 
-          echo ${{ steps.set_environment.outputs.ENVIRONMENT_NAME }}
+      - name: Echo environment
+        id: echo_environment
+        run: echo ${{ steps.set_environment.outputs.ENVIRONMENT_NAME }}
 #
 #
 #      - name: Check
