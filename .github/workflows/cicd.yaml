@@ -38,11 +38,25 @@ jobs:
           echo "github.head_ref: "${{ github.head_ref }} # PR source branch. empty outside pr
           echo "github.ref_name: "${{ github.ref_name }} # Either merge request "id/merge" or the branch name outside the PR.
           echo "github.event_name: "${{ github.event_name }} # in this scenario ['push', 'pull_request']. "push" even for tags.
+          # https://docs.github.com/en/rest/using-the-rest-api/github-event-types?apiVersion=2022-11-28#event-payload-object-for-createevent
+          echo "github.ref_type: "${{ github.ref_type }} # ['branch', 'tag'] in this scenario.
 
-#      - name: Set environment
-#        id: set_environment
-#        run: |
-#          echo ::set-output name=name::`node ./scripts/get-release-name.js ${{ github.run_number }}`
+      - name: Set environment
+        id: set_environment
+        run: |
+          if [[ ${{ github.ref_type }} == 'tag' ]]; then
+            echo ::set-output name=ENVIRONMENT_NAME::production
+          elif [[ ${{ github.ref_name }} == 'main' || ${{ github.ref_name }} == 'qa' ]]; then
+            echo ::set-output name=ENVIRONMENT_NAME::production
+          elif [[ ${{ github.ref_name }} == 'main' == 'dev' ]]; then
+            echo ::set-output name=ENVIRONMENT_NAME::develop
+          elif [[ ${{ github.ref_name }} == 'main' == 'uat' ]]; then
+            echo ::set-output name=ENVIRONMENT_NAME::uat
+          else
+            echo ::set-output name=name::test
+          fi
+
+          echo ${{ steps.set_environment.outputs.ENVIRONMENT_NAME }}
 #
 #
 #      - name: Check
