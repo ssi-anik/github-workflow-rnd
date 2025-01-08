@@ -11,7 +11,7 @@ on:
       # https://stackoverflow.com/a/57903434/2190689
       #- '*'         # matches every branch that doesn't contain a '/'
       #- '*/*'       # matches every branch containing a single '/'
-      #- '**'        # matches every branch
+      - '**'        # matches every branch
       #- '!master'   # excludes master
       - main
       - qa
@@ -41,24 +41,31 @@ jobs:
           # https://docs.github.com/en/rest/using-the-rest-api/github-event-types?apiVersion=2022-11-28#event-payload-object-for-createevent
           echo "github.ref_type: "${{ github.ref_type }} # ['branch', 'tag'] in this scenario.
 
-      - name: Set environment
-        id: set_environment
+      - name: Get Ref
+        id: get_ref
+        run: |
+          echo ::set-output name=REF::${{ github.base_ref }} || ${{ github.ref_name }}
+
+      - name: Get environment
+        id: get_environment
         run: |
           if [[ "${{ github.ref_type }}" == 'tag' ]]; then
-            echo ::set-output name=ENVIRONMENT_NAME::production
+            echo ::set-output name=ENVIRONMENT::production
           elif [[ "${{ github.ref_name }}" == 'main' || "${{ github.ref_name }}" == 'qa' ]]; then
-            echo ::set-output name=ENVIRONMENT_NAME::production
+            echo ::set-output name=ENVIRONMENT::production
           elif [[ "${{ github.ref_name }}" == 'dev' ]]; then
-            echo ::set-output name=ENVIRONMENT_NAME::develop
+            echo ::set-output name=ENVIRONMENT::develop
           elif [[ "${{ github.ref_name }}" == 'uat' ]]; then
-            echo ::set-output name=ENVIRONMENT_NAME::uat
+            echo ::set-output name=ENVIRONMENT::uat
           else
-            echo ::set-output name=ENVIRONMENT_NAME::test
+            echo ::set-output name=ENVIRONMENT::test
           fi
 
-      - name: Echo environment
-        id: echo_environment
-        run: echo ${{ steps.set_environment.outputs.ENVIRONMENT_NAME }}
+      - name: Print ref
+        run: echo ${{ steps.get_ref.outputs.REF }}
+
+      - name: Print environment
+        run: echo ${{ steps.get_environment.outputs.ENVIRONMENT }}
 #
 #
 #      - name: Check
