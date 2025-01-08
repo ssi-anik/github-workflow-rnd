@@ -43,22 +43,21 @@ jobs:
 
       - name: Get Ref
         id: get_ref
-        run: |
-          echo ::set-output name=REF::"${{ github.base_ref || github.ref_name }}"
+        run: echo REF="${{ github.base_ref || github.ref_name }}"
 
       - name: Get environment
         id: get_environment
         run: |
           if [[ "${{ github.ref_type }}" == 'tag' ]]; then
-            echo ::set-output name=ENVIRONMENT::production
+            echo ENVIRONMENT=production
           elif [[ "${{ github.ref_name }}" == 'main' || "${{ github.ref_name }}" == 'qa' ]]; then
-            echo ::set-output name=ENVIRONMENT::production
+            echo ENVIRONMENT=production
           elif [[ "${{ github.ref_name }}" == 'dev' ]]; then
-            echo ::set-output name=ENVIRONMENT::develop
+            echo ENVIRONMENT=develop
           elif [[ "${{ github.ref_name }}" == 'uat' ]]; then
-            echo ::set-output name=ENVIRONMENT::uat
+            echo ENVIRONMENT=uat
           else
-            echo ::set-output name=ENVIRONMENT::test
+            echo ENVIRONMENT=test
           fi
 
       - name: Print ref
