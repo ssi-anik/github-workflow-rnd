@@ -44,7 +44,7 @@ jobs:
       - name: Get Ref
         id: get_ref
         run: |
-          echo ::set-output name=REF::"${{ github.base_ref }} || ${{ github.ref_name }}"
+          echo ::set-output name=REF::"${{ github.base_ref || github.ref_name }}"
 
       - name: Get environment
         id: get_environment
