@@ -26,6 +26,7 @@ defaults:
 
 jobs:
   build:
+    environment: ${{ steps.get_environment.outputs.ENVIRONMENT }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout to codebase
@@ -68,7 +69,6 @@ jobs:
 
       - name: Deployment
         if: ${{ github.event_name }} != 'pull_request'
-        environment: ${{ steps.get_environment.outputs.ENVIRONMENT }}
         run: echo "This should be executed if not pull request"
 #
 #
