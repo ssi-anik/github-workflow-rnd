@@ -66,8 +66,9 @@ jobs:
       - name: Print environment
         run: echo ${{ steps.get_environment.outputs.ENVIRONMENT }}
 
-      - name: Skip step
+      - name: Deployment
         if: ${{ github.event_name }} != 'pull_request'
+        environment: ${{ steps.get_environment.outputs.ENVIRONMENT }}
         run: echo "This should be executed if not pull request"
 #
 #
