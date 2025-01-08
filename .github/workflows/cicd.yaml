@@ -68,7 +68,7 @@ jobs:
 
       - name: Skip step
         if: ${{ github.event_name }} != 'pull_request'
-        run: This should be executed if not pull request
+        run: echo "This should be executed if not pull request"
 #
 #
 #      - name: Check
