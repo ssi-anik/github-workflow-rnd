@@ -66,7 +66,7 @@ jobs:
           echo "Github: '${{ toJson(github) }}'"
           echo "Env: '${{ toJson(env) }}'"
           echo "Job: '${{ toJson(job) }}'"
-          echo "Jobs: '${{ toJson(jobs) }}'"
+          
           echo "Steps: '${{ toJson(steps) }}'"
           echo "Secrets: '${{ toJson(secrets) }}'"
           echo "Strategy: '${{ toJson(strategy) }}'"
