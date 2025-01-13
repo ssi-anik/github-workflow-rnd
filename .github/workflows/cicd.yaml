@@ -52,7 +52,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        environment: ${{ needs.select_environment.outputs.ENVIRONMENT }}
+        environment:
+        - ${{ needs.select_environment.outputs.ENVIRONMENT }}
     steps:
       - name: Checkout to codebase
         uses: actions/checkout@v4
