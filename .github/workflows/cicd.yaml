@@ -54,7 +54,6 @@ jobs:
 
       - name: Echo Github ref
         run: |
-          # echo "Environment: "${{ jobs.build.environment }}
           echo "Github: "${{ github }}
           echo "github.ref: "${{ github.ref }}
           echo "github.base_ref: "${{ github.base_ref }} # PR target branch. empty outside pr
