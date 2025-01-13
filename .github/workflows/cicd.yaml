@@ -33,7 +33,9 @@ jobs:
       - name: select environment
         id: select_environment
         run: |
-          if [[ "${{ github.ref_type }}" == 'tag' ]]; then
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            echo ENVIRONMENT="none" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref_type }}" == 'tag' ]]; then
             echo ENVIRONMENT=production >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref_name }}" == 'main' || "${{ github.ref_name }}" == 'qa' ]]; then
             echo ENVIRONMENT=production >> $GITHUB_OUTPUT
@@ -46,6 +48,7 @@ jobs:
           fi
 
   build:
+    name: Building application - ${{ needs.selected_environment.outputs.ENVIRONMENT }}
     # environment: ${{ needs.select_environment.outputs.ENVIRONMENT }}
     needs:
       - select_environment
@@ -57,6 +60,19 @@ jobs:
     steps:
       - name: Checkout to codebase
         uses: actions/checkout@v4
+
+      - name: Print contexts
+        run: |
+          echo "Github: '${{ toJson(github) }}'"
+          echo "Env: '${{ toJson(env) }}'"
+          echo "Job: '${{ toJson(job) }}'"
+          echo "Jobs: '${{ toJson(jobs) }}'"
+          echo "Steps: '${{ toJson(steps) }}'"
+          echo "Secrets: '${{ toJson(secrets) }}'"
+          echo "Strategy: '${{ toJson(strategy) }}'"
+          echo "Matrix: '${{ toJson(matrix) }}'"
+          echo "Needs: '${{ toJson(needs) }}'"
+          echo "Inputs: '${{ toJson(inputs) }}'"
 
       - name: Echo Github ref
         run: |
