@@ -26,6 +26,7 @@ defaults:
 
 jobs:
   select_environment:
+    runs-on: ubuntu-latest
     outputs:
       ENVIRONMENT: ${{ steps.select_environment.outputs.ENVIRONMENT }}
     steps:
