@@ -11,7 +11,7 @@ on:
       # https://stackoverflow.com/a/57903434/2190689
       #- '*'         # matches every branch that doesn't contain a '/'
       #- '*/*'       # matches every branch containing a single '/'
-      #- '**'        # matches every branch
+      - '**'        # matches every branch
       #- '!master'   # excludes master
       - main
       - qa
@@ -25,14 +25,42 @@ defaults:
     shell: bash
 
 jobs:
-  build:
+  select_environment:
     runs-on: ubuntu-latest
+    outputs:
+      ENVIRONMENT: ${{ steps.select_environment.outputs.ENVIRONMENT }}
+    steps:
+      - name: select environment
+        id: select_environment
+        run: |
+          if [[ "${{ github.ref_type }}" == 'tag' ]]; then
+            echo ENVIRONMENT=production >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref_name }}" == 'main' || "${{ github.ref_name }}" == 'qa' ]]; then
+            echo ENVIRONMENT=production >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref_name }}" == 'dev' ]]; then
+            echo ENVIRONMENT=develop >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref_name }}" == 'uat' ]]; then
+            echo ENVIRONMENT=uat >> $GITHUB_OUTPUT
+          else
+            echo ENVIRONMENT=test >> $GITHUB_OUTPUT
+          fi
+
+  build:
+    # environment: ${{ needs.select_environment.outputs.ENVIRONMENT }}
+    needs:
+      - select_environment
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment:
+        - ${{ needs.select_environment.outputs.ENVIRONMENT }}
     steps:
       - name: Checkout to codebase
         uses: actions/checkout@v4
 
       - name: Echo Github ref
         run: |
+          echo "Running for environment: "${{ matrix.environment }}
           echo "github.ref: "${{ github.ref }}
           echo "github.base_ref: "${{ github.base_ref }} # PR target branch. empty outside pr
           echo "github.head_ref: "${{ github.head_ref }} # PR source branch. empty outside pr
@@ -41,24 +69,36 @@ jobs:
           # https://docs.github.com/en/rest/using-the-rest-api/github-event-types?apiVersion=2022-11-28#event-payload-object-for-createevent
           echo "github.ref_type: "${{ github.ref_type }} # ['branch', 'tag'] in this scenario.
 
-      - name: Set environment
-        id: set_environment
+
+      - name: Get Ref
+        id: get_ref
+        run: echo REF="${{ github.base_ref || github.ref_name }}" >> $GITHUB_OUTPUT
+
+      - name: Get environment
+        id: get_environment
         run: |
           if [[ "${{ github.ref_type }}" == 'tag' ]]; then
-            echo ::set-output name=ENVIRONMENT_NAME::production
+            echo ENVIRONMENT=production >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref_name }}" == 'main' || "${{ github.ref_name }}" == 'qa' ]]; then
-            echo ::set-output name=ENVIRONMENT_NAME::production
+            echo ENVIRONMENT=production >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref_name }}" == 'dev' ]]; then
-            echo ::set-output name=ENVIRONMENT_NAME::develop
+            echo ENVIRONMENT=develop >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref_name }}" == 'uat' ]]; then
-            echo ::set-output name=ENVIRONMENT_NAME::uat
+            echo ENVIRONMENT=uat >> $GITHUB_OUTPUT
           else
-            echo ::set-output name=ENVIRONMENT_NAME::test
+            echo ENVIRONMENT=test >> $GITHUB_OUTPUT
           fi
 
-      - name: Echo environment
-        id: echo_environment
-        run: echo ${{ steps.set_environment.outputs.ENVIRONMENT_NAME }}
+
+      - name: Print ref
+        run: echo ${{ steps.get_ref.outputs.REF }}
+
+      - name: Print environment
+        run: echo ${{ steps.get_environment.outputs.ENVIRONMENT }}
+
+      - name: Deployment
+        if: ${{ github.event_name }} != 'pull_request'
+        run: echo "This should be executed if not pull request"
 #
 #
 #      - name: Check
