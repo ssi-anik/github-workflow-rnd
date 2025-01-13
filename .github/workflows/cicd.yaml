@@ -54,7 +54,7 @@ jobs:
 
       - name: Echo Github ref
         run: |
-          echo "Job: "${{ github.job }}
+          echo "Job: "${{ github.jobs.build }}
           echo "github.ref: "${{ github.ref }}
           echo "github.base_ref: "${{ github.base_ref }} # PR target branch. empty outside pr
           echo "github.head_ref: "${{ github.head_ref }} # PR source branch. empty outside pr
