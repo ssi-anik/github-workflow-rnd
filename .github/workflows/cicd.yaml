@@ -46,15 +46,18 @@ jobs:
           fi
 
   build:
-    environment: ${{ needs.select_environment.outputs.ENVIRONMENT }}
+    # environment: ${{ needs.select_environment.outputs.ENVIRONMENT }}
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: ${{ needs.select_environment.outputs.ENVIRONMENT }}
     steps:
       - name: Checkout to codebase
         uses: actions/checkout@v4
 
       - name: Echo Github ref
         run: |
-          echo "Job: "${{ github.jobs.build }}
+          echo "Running for environment: "${{ matrix.environment }}
           echo "github.ref: "${{ github.ref }}
           echo "github.base_ref: "${{ github.base_ref }} # PR target branch. empty outside pr
           echo "github.head_ref: "${{ github.head_ref }} # PR source branch. empty outside pr
