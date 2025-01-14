@@ -73,7 +73,7 @@ jobs:
         env:
           VARIABLE_B: 'B @ step-level-variable'
           SECRET_KEY: ${{ secrets.SECRET_APP_KEY }}
-          VAR_KEY: ${{ secrets.VAR_APP_KEY }}
+          VAR_KEY: ${{ vars.VAR_APP_KEY }}
         run: |
           echo ${{ env.VARIABLE_A }}
           echo ${{ env.VARIABLE_B }}
