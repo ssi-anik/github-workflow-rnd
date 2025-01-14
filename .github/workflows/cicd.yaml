@@ -48,6 +48,8 @@ jobs:
             echo ENVIRONMENT=develop >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref_name }}" == 'uat' ]]; then
             echo ENVIRONMENT=uat >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref_name }}" == 'feature/feature-branch' ]]; then
+            echo ENVIRONMENT=develop >> $GITHUB_OUTPUT
           else
             echo ENVIRONMENT=test >> $GITHUB_OUTPUT
           fi
