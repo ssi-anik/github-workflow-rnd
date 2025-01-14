@@ -50,8 +50,8 @@ jobs:
   build:
     name: Building application - ${{ needs.selected_environment.outputs.ENVIRONMENT }}
     # environment: ${{ needs.select_environment.outputs.ENVIRONMENT }}
-    needs:
-      - select_environment
+#    needs:
+#      - select_environment
     runs-on: ubuntu-latest
     strategy:
       matrix:
