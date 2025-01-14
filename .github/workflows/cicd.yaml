@@ -25,27 +25,27 @@ defaults:
     shell: bash
 
 jobs:
-  select_environment:
-    runs-on: ubuntu-latest
-    outputs:
-      ENVIRONMENT: ${{ steps.select_environment.outputs.ENVIRONMENT }}
-    steps:
-      - name: select environment
-        id: select_environment
-        run: |
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            echo ENVIRONMENT="none" >> $GITHUB_OUTPUT
-          elif [[ "${{ github.ref_type }}" == 'tag' ]]; then
-            echo ENVIRONMENT=production >> $GITHUB_OUTPUT
-          elif [[ "${{ github.ref_name }}" == 'main' || "${{ github.ref_name }}" == 'qa' ]]; then
-            echo ENVIRONMENT=production >> $GITHUB_OUTPUT
-          elif [[ "${{ github.ref_name }}" == 'dev' ]]; then
-            echo ENVIRONMENT=develop >> $GITHUB_OUTPUT
-          elif [[ "${{ github.ref_name }}" == 'uat' ]]; then
-            echo ENVIRONMENT=uat >> $GITHUB_OUTPUT
-          else
-            echo ENVIRONMENT=test >> $GITHUB_OUTPUT
-          fi
+#  select_environment:
+#    runs-on: ubuntu-latest
+#    outputs:
+#      ENVIRONMENT: ${{ steps.select_environment.outputs.ENVIRONMENT }}
+#    steps:
+#      - name: select environment
+#        id: select_environment
+#        run: |
+#          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+#            echo ENVIRONMENT="none" >> $GITHUB_OUTPUT
+#          elif [[ "${{ github.ref_type }}" == 'tag' ]]; then
+#            echo ENVIRONMENT=production >> $GITHUB_OUTPUT
+#          elif [[ "${{ github.ref_name }}" == 'main' || "${{ github.ref_name }}" == 'qa' ]]; then
+#            echo ENVIRONMENT=production >> $GITHUB_OUTPUT
+#          elif [[ "${{ github.ref_name }}" == 'dev' ]]; then
+#            echo ENVIRONMENT=develop >> $GITHUB_OUTPUT
+#          elif [[ "${{ github.ref_name }}" == 'uat' ]]; then
+#            echo ENVIRONMENT=uat >> $GITHUB_OUTPUT
+#          else
+#            echo ENVIRONMENT=test >> $GITHUB_OUTPUT
+#          fi
 
   build:
     name: Building application - ${{ needs.selected_environment.outputs.ENVIRONMENT }}
@@ -56,23 +56,24 @@ jobs:
     strategy:
       matrix:
         environment:
-        - ${{ needs.select_environment.outputs.ENVIRONMENT }}
+        #- ${{ needs.select_environment.outputs.ENVIRONMENT }}
+        - uat
     steps:
       - name: Checkout to codebase
         uses: actions/checkout@v4
 
       - name: Print contexts
-        # echo "Github: '${{ toJson(github) }}'"
+        # node printer.js ${{ toJson(github) }}
         run: |
-          echo "Env: '${{ toJson(env) }}'"
-          echo "Job: '${{ toJson(job) }}'"
+          node printer.js ${{ toJson(env) }}
+          node printer.js ${{ toJson(job) }}
 
-          echo "Steps: '${{ toJson(steps) }}'"
-          echo "Secrets: '${{ toJson(secrets) }}'"
-          echo "Strategy: '${{ toJson(strategy) }}'"
-          echo "Matrix: '${{ toJson(matrix) }}'"
-          echo "Needs: '${{ toJson(needs) }}'"
-          echo "Inputs: '${{ toJson(inputs) }}'"
+          node printer.js ${{ toJson(steps) }}
+          node printer.js ${{ toJson(secrets) }}
+          node printer.js ${{ toJson(strategy) }}
+          node printer.js ${{ toJson(matrix) }}
+          node printer.js ${{ toJson(needs) }}
+          node printer.js ${{ toJson(inputs) }}
 
 #      - name: Echo Github ref
 #        run: |
