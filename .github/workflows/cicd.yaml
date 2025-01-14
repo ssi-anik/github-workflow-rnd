@@ -66,7 +66,7 @@ jobs:
           node printer.js ${{ toJson(github) }} 
           echo "Env: '${{ toJson(env) }}'"
           echo "Job: '${{ toJson(job) }}'"
-          
+
           echo "Steps: '${{ toJson(steps) }}'"
           echo "Secrets: '${{ toJson(secrets) }}'"
           echo "Strategy: '${{ toJson(strategy) }}'"
@@ -74,16 +74,16 @@ jobs:
           echo "Needs: '${{ toJson(needs) }}'"
           echo "Inputs: '${{ toJson(inputs) }}'"
 
-      - name: Echo Github ref
-        run: |
-          echo "Running for environment: "${{ matrix.environment }}
-          echo "github.ref: "${{ github.ref }}
-          echo "github.base_ref: "${{ github.base_ref }} # PR target branch. empty outside pr
-          echo "github.head_ref: "${{ github.head_ref }} # PR source branch. empty outside pr
-          echo "github.ref_name: "${{ github.ref_name }} # Either merge request "id/merge" or the branch name outside the PR.
-          echo "github.event_name: "${{ github.event_name }} # in this scenario ['push', 'pull_request']. "push" even for tags.
-          # https://docs.github.com/en/rest/using-the-rest-api/github-event-types?apiVersion=2022-11-28#event-payload-object-for-createevent
-          echo "github.ref_type: "${{ github.ref_type }} # ['branch', 'tag'] in this scenario.
+#      - name: Echo Github ref
+#        run: |
+#          echo "Running for environment: "${{ matrix.environment }}
+#          echo "github.ref: "${{ github.ref }}
+#          echo "github.base_ref: "${{ github.base_ref }} # PR target branch. empty outside pr
+#          echo "github.head_ref: "${{ github.head_ref }} # PR source branch. empty outside pr
+#          echo "github.ref_name: "${{ github.ref_name }} # Either merge request "id/merge" or the branch name outside the PR.
+#          echo "github.event_name: "${{ github.event_name }} # in this scenario ['push', 'pull_request']. "push" even for tags.
+#          # https://docs.github.com/en/rest/using-the-rest-api/github-event-types?apiVersion=2022-11-28#event-payload-object-for-createevent
+#          echo "github.ref_type: "${{ github.ref_type }} # ['branch', 'tag'] in this scenario.
 
 
       - name: Get Ref
