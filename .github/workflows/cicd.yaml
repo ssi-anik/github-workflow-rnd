@@ -63,7 +63,7 @@ jobs:
 
       - name: Print contexts
         run: |
-          echo "Github: "${{ toJson(github) }} 
+          echo "Github: '${{ toJson(github) }}'" 
           echo "Env: '${{ toJson(env) }}'"
           echo "Job: '${{ toJson(job) }}'"
 
