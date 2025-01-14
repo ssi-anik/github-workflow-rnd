@@ -63,8 +63,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Print contexts
-        # node printer.js ${{ toJson(github) }}
         run: |
+          node printer.js ${{ toJson(github) }}
           node printer.js ${{ toJson(env) }}
           node printer.js ${{ toJson(job) }}
 
