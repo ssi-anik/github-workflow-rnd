@@ -45,11 +45,11 @@ jobs:
           elif [[ "${{ github.ref_name }}" == 'main' || "${{ github.ref_name }}" == 'qa' ]]; then
             echo ENVIRONMENT=production >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref_name }}" == 'dev' ]]; then
-            echo ENVIRONMENT=develop >> $GITHUB_OUTPUT
+            echo ENVIRONMENT=dev >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref_name }}" == 'uat' ]]; then
             echo ENVIRONMENT=uat >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref_name }}" == 'feature/feature-branch' ]]; then
-            echo ENVIRONMENT=develop >> $GITHUB_OUTPUT
+            echo ENVIRONMENT=dev >> $GITHUB_OUTPUT
           else
             echo ENVIRONMENT=test >> $GITHUB_OUTPUT
           fi
