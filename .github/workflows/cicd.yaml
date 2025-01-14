@@ -62,8 +62,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Print contexts
+        # echo "Github: '${{ toJson(github) }}'"
         run: |
-          echo "Github: '${{ toJson(github) }}'" 
           echo "Env: '${{ toJson(env) }}'"
           echo "Job: '${{ toJson(job) }}'"
 
