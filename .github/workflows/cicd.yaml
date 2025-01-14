@@ -78,8 +78,8 @@ jobs:
           echo ${{ env.VARIABLE_A }}
           echo ${{ env.VARIABLE_B }}
           echo ${{ env.VARIABLE_C }}
-          echo ${{ env.SECRET_KEY }}
-          echo ${{ env.VAR_KEY }}
+          node printer.js "secret key" ${{ env.SECRET_KEY }}
+          node printer.js "var key" ${{ env.VAR_KEY }}
 
       - name: Deploy - ${{ matrix.environment }}
         run: |
