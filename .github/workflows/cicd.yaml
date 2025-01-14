@@ -25,76 +25,17 @@ defaults:
     shell: bash
 
 jobs:
-#  select_environment:
-#    runs-on: ubuntu-latest
-#    outputs:
-#      ENVIRONMENT: ${{ steps.select_environment.outputs.ENVIRONMENT }}
-#    steps:
-#      - name: select environment
-#        id: select_environment
-#        run: |
-#          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-#            echo ENVIRONMENT="none" >> $GITHUB_OUTPUT
-#          elif [[ "${{ github.ref_type }}" == 'tag' ]]; then
-#            echo ENVIRONMENT=production >> $GITHUB_OUTPUT
-#          elif [[ "${{ github.ref_name }}" == 'main' || "${{ github.ref_name }}" == 'qa' ]]; then
-#            echo ENVIRONMENT=production >> $GITHUB_OUTPUT
-#          elif [[ "${{ github.ref_name }}" == 'dev' ]]; then
-#            echo ENVIRONMENT=develop >> $GITHUB_OUTPUT
-#          elif [[ "${{ github.ref_name }}" == 'uat' ]]; then
-#            echo ENVIRONMENT=uat >> $GITHUB_OUTPUT
-#          else
-#            echo ENVIRONMENT=test >> $GITHUB_OUTPUT
-#          fi
-
-  build:
-    name: Building application - ${{ needs.selected_environment.outputs.ENVIRONMENT }}
-    # environment: ${{ needs.select_environment.outputs.ENVIRONMENT }}
-#    needs:
-#      - select_environment
+  select_environment:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        environment:
-        #- ${{ needs.select_environment.outputs.ENVIRONMENT }}
-        - uat
+    outputs:
+      ENVIRONMENT: ${{ steps.select_environment.outputs.ENVIRONMENT }}
     steps:
-      - name: Checkout to codebase
-        uses: actions/checkout@v4
-
-      - name: Print contexts
+      - name: select environment
+        id: select_environment
         run: |
-          node printer.js ${{ toJson(github) }}
-          node printer.js ${{ toJson(env) }}
-          node printer.js ${{ toJson(job) }}
-
-          node printer.js ${{ toJson(steps) }}
-          node printer.js ${{ toJson(secrets) }}
-          node printer.js ${{ toJson(strategy) }}
-          node printer.js ${{ toJson(matrix) }}
-          node printer.js ${{ toJson(needs) }}
-          node printer.js ${{ toJson(inputs) }}
-
-#      - name: Echo Github ref
-#        run: |
-#          echo "Running for environment: "${{ matrix.environment }}
-#          echo "github.ref: "${{ github.ref }}
-#          echo "github.base_ref: "${{ github.base_ref }} # PR target branch. empty outside pr
-#          echo "github.head_ref: "${{ github.head_ref }} # PR source branch. empty outside pr
-#          echo "github.ref_name: "${{ github.ref_name }} # Either merge request "id/merge" or the branch name outside the PR.
-#          echo "github.event_name: "${{ github.event_name }} # in this scenario ['push', 'pull_request']. "push" even for tags.
-#          # https://docs.github.com/en/rest/using-the-rest-api/github-event-types?apiVersion=2022-11-28#event-payload-object-for-createevent
-#          echo "github.ref_type: "${{ github.ref_type }} # ['branch', 'tag'] in this scenario.
-
-
-      - name: Get Ref
-        id: get_ref
-        run: echo REF="${{ github.base_ref || github.ref_name }}" >> $GITHUB_OUTPUT
-
-      - name: Get environment
-        id: get_environment
-        run: |
-          if [[ "${{ github.ref_type }}" == 'tag' ]]; then
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            echo ENVIRONMENT="none" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref_type }}" == 'tag' ]]; then
             echo ENVIRONMENT=production >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref_name }}" == 'main' || "${{ github.ref_name }}" == 'qa' ]]; then
             echo ENVIRONMENT=production >> $GITHUB_OUTPUT
@@ -106,16 +47,87 @@ jobs:
             echo ENVIRONMENT=test >> $GITHUB_OUTPUT
           fi
 
+  build:
+    name: Building application - ${{ needs.selected_environment.outputs.ENVIRONMENT }}
+    environment: ${{ needs.select_environment.outputs.ENVIRONMENT }}
+    needs:
+      - select_environment
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment:
+          - ${{ needs.select_environment.outputs.ENVIRONMENT }}
+    steps:
+      - name: Checkout to codebase
+        uses: actions/checkout@v4
 
-      - name: Print ref
-        run: echo ${{ steps.get_ref.outputs.REF }}
+      - name: Build - ${{ matrix.environment }}
+        env:
+          SECRET_KEY: SECRET_APP_KEY
+          VAR_KEY: VAR_APP_KEY
+        run: |
+          echo ${{ env.SECRET_KEY }}
+          echo ${{ env.VAR_KEY }}
 
-      - name: Print environment
-        run: echo ${{ steps.get_environment.outputs.ENVIRONMENT }}
+      - name: Deploy - ${{ matrix.environment }}
+        run: |
+          echo ${{ env.SECRET_KEY }}
+          echo ${{ env.VAR_KEY }}
 
-      - name: Deployment
-        if: ${{ github.event_name }} != 'pull_request'
-        run: echo "This should be executed if not pull request"
+      #      - name: Print contexts
+      #        run: |
+      #          node printer.js ${{ toJson(github) }}
+      #          node printer.js ${{ toJson(env) }}
+      #          node printer.js ${{ toJson(job) }}
+      #
+      #          node printer.js ${{ toJson(steps) }}
+      #          node printer.js ${{ toJson(secrets) }}
+      #          node printer.js ${{ toJson(strategy) }}
+      #          node printer.js ${{ toJson(matrix) }}
+      #          node printer.js ${{ toJson(needs) }}
+      #          node printer.js ${{ toJson(inputs) }}
+
+      #      - name: Echo Github ref
+      #        run: |
+      #          echo "Running for environment: "${{ matrix.environment }}
+      #          echo "github.ref: "${{ github.ref }}
+      #          echo "github.base_ref: "${{ github.base_ref }} # PR target branch. empty outside pr
+      #          echo "github.head_ref: "${{ github.head_ref }} # PR source branch. empty outside pr
+      #          echo "github.ref_name: "${{ github.ref_name }} # Either merge request "id/merge" or the branch name outside the PR.
+      #          echo "github.event_name: "${{ github.event_name }} # in this scenario ['push', 'pull_request']. "push" even for tags.
+      #          # https://docs.github.com/en/rest/using-the-rest-api/github-event-types?apiVersion=2022-11-28#event-payload-object-for-createevent
+      #          echo "github.ref_type: "${{ github.ref_type }} # ['branch', 'tag'] in this scenario.
+
+
+#      - name: Get Ref
+#        id: get_ref
+#        run: echo REF="${{ github.base_ref || github.ref_name }}" >> $GITHUB_OUTPUT
+
+#      - name: Get environment
+#        id: get_environment
+#        run: |
+#          if [[ "${{ github.ref_type }}" == 'tag' ]]; then
+#            echo ENVIRONMENT=production >> $GITHUB_OUTPUT
+#          elif [[ "${{ github.ref_name }}" == 'main' || "${{ github.ref_name }}" == 'qa' ]]; then
+#            echo ENVIRONMENT=production >> $GITHUB_OUTPUT
+#          elif [[ "${{ github.ref_name }}" == 'dev' ]]; then
+#            echo ENVIRONMENT=develop >> $GITHUB_OUTPUT
+#          elif [[ "${{ github.ref_name }}" == 'uat' ]]; then
+#            echo ENVIRONMENT=uat >> $GITHUB_OUTPUT
+#          else
+#            echo ENVIRONMENT=test >> $GITHUB_OUTPUT
+#          fi
+#
+
+#      - name: Print ref
+#        run: echo ${{ steps.get_ref.outputs.REF }}
+
+#      - name: Print environment
+#        run: echo ${{ steps.get_environment.outputs.ENVIRONMENT }}
+
+#      - name: Deployment
+#        if: ${{ github.event_name }} != 'pull_request'
+#        run: echo "This should be executed if not pull request"
 #
 #
 #      - name: Check
