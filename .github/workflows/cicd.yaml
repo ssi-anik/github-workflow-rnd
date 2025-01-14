@@ -30,41 +30,41 @@ env:
   VARIABLE_C: 'C @ workflow-level-variable'
 
 jobs:
-#  select_environment:
-#    runs-on: ubuntu-latest
-#    outputs:
-#      ENVIRONMENT: ${{ steps.select_environment.outputs.ENVIRONMENT }}
-#    steps:
-#      - name: select environment
-#        id: select_environment
-#        run: |
-#          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-#            echo ENVIRONMENT="none" >> $GITHUB_OUTPUT
-#          elif [[ "${{ github.ref_type }}" == 'tag' ]]; then
-#            echo ENVIRONMENT=production >> $GITHUB_OUTPUT
-#          elif [[ "${{ github.ref_name }}" == 'main' || "${{ github.ref_name }}" == 'qa' ]]; then
-#            echo ENVIRONMENT=production >> $GITHUB_OUTPUT
-#          elif [[ "${{ github.ref_name }}" == 'dev' ]]; then
-#            echo ENVIRONMENT=develop >> $GITHUB_OUTPUT
-#          elif [[ "${{ github.ref_name }}" == 'uat' ]]; then
-#            echo ENVIRONMENT=uat >> $GITHUB_OUTPUT
-#          else
-#            echo ENVIRONMENT=test >> $GITHUB_OUTPUT
-#          fi
+  select_environment:
+    runs-on: ubuntu-latest
+    outputs:
+      ENVIRONMENT: ${{ steps.select_environment.outputs.ENVIRONMENT }}
+    steps:
+      - name: select environment
+        id: select_environment
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            echo ENVIRONMENT="none" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref_type }}" == 'tag' ]]; then
+            echo ENVIRONMENT=production >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref_name }}" == 'main' || "${{ github.ref_name }}" == 'qa' ]]; then
+            echo ENVIRONMENT=production >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref_name }}" == 'dev' ]]; then
+            echo ENVIRONMENT=develop >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref_name }}" == 'uat' ]]; then
+            echo ENVIRONMENT=uat >> $GITHUB_OUTPUT
+          else
+            echo ENVIRONMENT=test >> $GITHUB_OUTPUT
+          fi
 
   build:
     name: Building application - ${{ matrix.environment }}
     env:
       VARIABLE_A: 'A @ job-level-variable'
     environment: ${{ matrix.environment }}
-#    needs:
-#      - select_environment
+    needs:
+      - select_environment
     runs-on: ubuntu-latest
     strategy:
       matrix:
         environment:
-          #- ${{ needs.select_environment.outputs.ENVIRONMENT }}
-          - production
+          - ${{ needs.select_environment.outputs.ENVIRONMENT }}
+          # - production
     steps:
       - name: Checkout to codebase
         uses: actions/checkout@v4
@@ -74,12 +74,17 @@ jobs:
           VARIABLE_B: 'B @ step-level-variable'
           SECRET_KEY: ${{ secrets.SECRET_APP_KEY }}
           VAR_KEY: ${{ vars.VAR_APP_KEY }}
+          SECRETS_FILE_CONTENTS: ${{ secrets.SECRET_DOT_ENV }}
         run: |
           echo ${{ env.VARIABLE_A }}
           echo ${{ env.VARIABLE_B }}
           echo ${{ env.VARIABLE_C }}
           echo "secret key" ${{ env.SECRET_KEY }}
           echo "var key" ${{ env.VAR_KEY }}
+          echo "var key directly referenced: " ${{ vars.VAR_APP_KEY }}
+          touch .env
+          echo $SECRETS_FILE_CONTENTS > .env
+          cat .env
 
       - name: Deploy - ${{ matrix.environment }}
         run: |
