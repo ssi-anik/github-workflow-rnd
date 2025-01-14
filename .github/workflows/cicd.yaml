@@ -72,12 +72,14 @@ jobs:
       - name: Build - ${{ matrix.environment }}
         env:
           VARIABLE_B: 'B @ step-level-variable'
-          # SECRET_KEY: SECRET_APP_KEY
-          # VAR_KEY: VAR_APP_KEY
+          SECRET_KEY: ${{ secrets.SECRET_APP_KEY }}
+          VAR_KEY: ${{ secrets.VAR_APP_KEY }}
         run: |
           echo ${{ env.VARIABLE_A }}
           echo ${{ env.VARIABLE_B }}
           echo ${{ env.VARIABLE_C }}
+          echo ${{ env.SECRET_KEY }}
+          echo ${{ env.VAR_KEY }}
 
       - name: Deploy - ${{ matrix.environment }}
         run: |
