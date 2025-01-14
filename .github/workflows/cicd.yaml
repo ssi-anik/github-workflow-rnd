@@ -77,16 +77,21 @@ jobs:
           SECRET_KEY: ${{ secrets.SECRET_APP_KEY }}
           VAR_KEY: ${{ vars.VAR_APP_KEY }}
           SECRETS_FILE_CONTENTS: ${{ secrets.SECRET_DOT_ENV }}
+        # run: |
+          # Removed from the following script
+          # The following works file.
+          # https://github.com/ssi-anik/github-workflow-rnd/actions/runs/12763528519/job/35573899578
+          # touch .env
+          # echo $SECRETS_FILE_CONTENTS > .env
+          # cat .env
         run: |
           echo ${{ env.VARIABLE_A }}
           echo ${{ env.VARIABLE_B }}
           echo ${{ env.VARIABLE_C }}
           echo "secret key" ${{ env.SECRET_KEY }}
           echo "var key" ${{ env.VAR_KEY }}
+          echo "secret key directly referenced: " ${{ secrets.SECRET_APP_KEY }}
           echo "var key directly referenced: " ${{ vars.VAR_APP_KEY }}
-          touch .env
-          echo $SECRETS_FILE_CONTENTS > .env
-          cat .env
 
       - name: Deploy - ${{ matrix.environment }}
         run: |
