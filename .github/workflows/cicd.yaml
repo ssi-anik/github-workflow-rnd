@@ -99,7 +99,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          username: ${{ secrets.USERNAME }}
+          username: ${{ secrets.SSH_USERNAME }}
           script: |
             whoami
             ls -al
