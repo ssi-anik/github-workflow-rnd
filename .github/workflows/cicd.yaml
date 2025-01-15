@@ -93,10 +93,24 @@ jobs:
           echo "secret key directly referenced: " ${{ secrets.SECRET_APP_KEY }}
           echo "var key directly referenced: " ${{ vars.VAR_APP_KEY }}
 
-      - name: Deploy - ${{ matrix.environment }}
-        run: |
-          echo ${{ env.SECRET_KEY }}
-          echo ${{ env.VAR_KEY }}
+      - name: multiple command
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          username: ${{ secrets.USERNAME }}
+          script: |
+            whoami
+            ls -al
+
+#      - name: Deploy - ${{ matrix.environment }}
+#        run: |
+#          mkdir -p ~/.ssh
+#          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+#          chmod 600 ~/.ssh/id_ed25519
+#          ssh-keyscan ${{ secrets.VM_IP_ADDRESS }} >> ~/.ssh/known_hosts
+#          ssh -i ~/.ssh/id_ed25519 ${{ secrets.VM_USERNAME }}@${{ secrets.VM_IP_ADDRESS }} 'bash -s' < ./your-script.sh
 
       #      - name: Print contexts
       #        run: |
