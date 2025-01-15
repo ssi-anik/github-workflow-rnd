@@ -103,6 +103,7 @@ jobs:
           script: |
             whoami
             ls -al
+            ./home/anik/test.sh "hello world! anik"
 
 #      - name: Deploy - ${{ matrix.environment }}
 #        run: |
