@@ -39,6 +39,7 @@ jobs:
       - name: select environment
         id: select_environment
         run: |
+          
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
             echo ENVIRONMENT="none" >> $GITHUB_OUTPUT
             echo ANOTHER_THING="${{ secrets.ANOTHER_THING }}" >> $GITHUB_OUTPUT
