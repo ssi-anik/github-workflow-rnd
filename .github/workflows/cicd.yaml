@@ -41,25 +41,25 @@ jobs:
         run: |
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
             echo ENVIRONMENT="none" >> $GITHUB_OUTPUT
-            echo ANOTHER_THING="pull-request-another_thing" >> $GITHUB_OUTPUT
+            echo ANOTHER_THING="${{ secrets.ANOTHER_THING }}"" >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref_type }}" == 'tag' ]]; then
             echo ENVIRONMENT=production >> $GITHUB_OUTPUT
-            echo ANOTHER_THING="prod-tag-another_thing" >> $GITHUB_OUTPUT
+            echo ANOTHER_THING="${{ secrets.ANOTHER_THING }}"" >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref_name }}" == 'main' || "${{ github.ref_name }}" == 'qa' ]]; then
             echo ENVIRONMENT=production >> $GITHUB_OUTPUT
-            echo ANOTHER_THING="prod-ref-another_thing" >> $GITHUB_OUTPUT
+            echo ANOTHER_THING="${{ secrets.ANOTHER_THING }}"" >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref_name }}" == 'dev' ]]; then
             echo ENVIRONMENT=dev >> $GITHUB_OUTPUT
-            echo ANOTHER_THING="dev-another_thing" >> $GITHUB_OUTPUT
+            echo ANOTHER_THING="${{ secrets.ANOTHER_THING }}"" >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref_name }}" == 'feature/feature-branch' ]]; then
             echo ENVIRONMENT=dev >> $GITHUB_OUTPUT
-            echo ANOTHER_THING="dev-feature-branch-another_thing" >> $GITHUB_OUTPUT
+            echo ANOTHER_THING="${{ secrets.ANOTHER_THING }}"" >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref_name }}" == 'uat' ]]; then
             echo ENVIRONMENT=uat >> $GITHUB_OUTPUT
-            echo ANOTHER_THING="uat-another_thing" >> $GITHUB_OUTPUT
+            echo ANOTHER_THING="${{ secrets.ANOTHER_THING }}"" >> $GITHUB_OUTPUT
           else
             echo ENVIRONMENT=test >> $GITHUB_OUTPUT
-            echo ANOTHER_THING="test-another_thing" >> $GITHUB_OUTPUT
+            echo ANOTHER_THING="${{ secrets.ANOTHER_THING }}"" >> $GITHUB_OUTPUT
           fi
 
   build:
