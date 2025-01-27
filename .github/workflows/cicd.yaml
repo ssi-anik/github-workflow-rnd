@@ -42,25 +42,25 @@ jobs:
           
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
             echo ENVIRONMENT="none" >> $GITHUB_OUTPUT
-            echo ANOTHER_THING="${{ vars.ANOTHER_THING_NONE }}" >> $GITHUB_OUTPUT
+            echo ANOTHER_THING="${{ secrets.ANOTHER_SECRET_NONE }}" >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref_type }}" == 'tag' ]]; then
             echo ENVIRONMENT=production >> $GITHUB_OUTPUT
-            echo ANOTHER_THING="${{ vars.ANOTHER_THING_PROD }}" >> $GITHUB_OUTPUT
+            echo ANOTHER_THING="${{ secrets.ANOTHER_SECRET_PROD }}" >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref_name }}" == 'main' || "${{ github.ref_name }}" == 'qa' ]]; then
             echo ENVIRONMENT=production >> $GITHUB_OUTPUT
-            echo ANOTHER_THING="${{ vars.ANOTHER_THING_PROD }}" >> $GITHUB_OUTPUT
+            echo ANOTHER_THING="${{ secrets.ANOTHER_SECRET_PROD }}" >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref_name }}" == 'dev' ]]; then
             echo ENVIRONMENT=dev >> $GITHUB_OUTPUT
-            echo ANOTHER_THING="${{ vars.ANOTHER_THING_DEV }}" >> $GITHUB_OUTPUT
+            echo ANOTHER_THING="${{ secrets.ANOTHER_SECRET_DEV }}" >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref_name }}" == 'feature/feature-branch' ]]; then
             echo ENVIRONMENT=dev >> $GITHUB_OUTPUT
-            echo ANOTHER_THING="${{ vars.ANOTHER_THING_DEV }}" >> $GITHUB_OUTPUT
+            echo ANOTHER_THING="${{ secrets.ANOTHER_SECRET_DEV }}" >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref_name }}" == 'uat' ]]; then
             echo ENVIRONMENT=uat >> $GITHUB_OUTPUT
-            echo ANOTHER_THING="${{ vars.ANOTHER_THING_UAT }}" >> $GITHUB_OUTPUT
+            echo ANOTHER_THING="${{ secrets.ANOTHER_SECRET_UAT }}" >> $GITHUB_OUTPUT
           else
             echo ENVIRONMENT=test >> $GITHUB_OUTPUT
-            echo ANOTHER_THING="${{ vars.ANOTHER_THING_TEST }}" >> $GITHUB_OUTPUT
+            echo ANOTHER_THING="${{ secrets.ANOTHER_SECRET_TEST }}" >> $GITHUB_OUTPUT
           fi
 
   build:
