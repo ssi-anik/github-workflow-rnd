@@ -40,7 +40,7 @@ jobs:
       - name: print things
         run: |
           echo "Sha: " ${GITHUB_SHA::8}
-          echo "Sha from context: " ${'${{ github.sha }}'::8}
+          echo "Sha from context: " ${{ github.sha }}
 
       - name: select environment
         id: select_environment
