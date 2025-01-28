@@ -40,7 +40,8 @@ jobs:
       - name: select environment
         id: select_environment
         run: |
-          echo JSON_VARIABLE=${{ vars.JSON_VARIABLE }} >> $GITHUB_OUTPUT
+          # echo JSON_VARIABLE=${{ vars.JSON_VARIABLE }} >> $GITHUB_OUTPUT
+          echo "JSON_VARIABLE<<EOF"$'\n'"${{ vars.JSON_VARIABLE }}"$'\n'EOF >> "$GITHUB_ENV"
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
             echo ENVIRONMENT="none" >> $GITHUB_OUTPUT
             echo ANOTHER_THING="${{ secrets.ANOTHER_SECRET_NONE }}" >> $GITHUB_OUTPUT
