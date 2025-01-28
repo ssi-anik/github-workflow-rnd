@@ -41,6 +41,8 @@ jobs:
         run: |
           echo "Sha: " ${GITHUB_SHA::8}
           echo "Sha from context: " ${{ github.sha }}
+          echo "ref from context: " ${{ github.ref }}
+          echo "refname from context: " ${{ github.ref_name }}
 
       - name: select environment
         id: select_environment
