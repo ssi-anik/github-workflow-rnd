@@ -37,6 +37,11 @@ jobs:
       ANOTHER_THING: ${{ steps.select_environment.outputs.ANOTHER_THING }}
       JSON_VARIABLE: ${{ steps.select_environment.outputs.JSON_VARIABLE }}
     steps:
+      - name: print things
+        run: |
+          echo "Sha: " ${GITHUB_SHA::8}
+          echo "Sha from context: " ${${{ github.sha }}::8}
+
       - name: select environment
         id: select_environment
         run: |
