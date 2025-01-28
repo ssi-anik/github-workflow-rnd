@@ -35,7 +35,7 @@ jobs:
     outputs:
       ENVIRONMENT: ${{ steps.select_environment.outputs.ENVIRONMENT }}
       ANOTHER_THING: ${{ steps.select_environment.outputs.ANOTHER_THING }}
-      JSON_VARIABLE: ${{ steps.select_environment.outputs.JSON_VARIABLE }}
+      JSON_VARIABLE: ${{ toJSON(steps.select_environment.outputs.JSON_VARIABLE) }}
     steps:
       - name: select environment
         id: select_environment
