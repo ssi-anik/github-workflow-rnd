@@ -35,12 +35,12 @@ jobs:
     outputs:
       ENVIRONMENT: ${{ steps.select_environment.outputs.ENVIRONMENT }}
       ANOTHER_THING: ${{ steps.select_environment.outputs.ANOTHER_THING }}
-      JSON_VARIABLE: ${{ toJSON(steps.select_environment.outputs.JSON_VARIABLE) }}
+      JSON_VARIABLE: ${{ steps.select_environment.outputs.JSON_VARIABLE }}
     steps:
       - name: select environment
         id: select_environment
         run: |
-          echo "JSON_VARIABLE<<EOF"$'\n'"${{ vars.JSON_VARIABLE }}"$'\n'EOF >> "$GITHUB_ENV"
+          echo "JSON_VARIABLE<<EOF"$'\n''${{ vars.JSON_VARIABLE }}'$'\n'EOF >> "$GITHUB_ENV"
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
             echo ENVIRONMENT="none" >> $GITHUB_OUTPUT
             echo ANOTHER_THING="${{ secrets.ANOTHER_SECRET_NONE }}" >> $GITHUB_OUTPUT
