@@ -35,11 +35,12 @@ jobs:
     outputs:
       ENVIRONMENT: ${{ steps.select_environment.outputs.ENVIRONMENT }}
       ANOTHER_THING: ${{ steps.select_environment.outputs.ANOTHER_THING }}
+      JSON_VARIABLE: ${{ steps.select_environment.outputs.JSON_VARIABLE }}
     steps:
       - name: select environment
         id: select_environment
         run: |
-          
+          echo JSON_VARIABLE=${{ vars.JSON_VARIABLE }} >> $GITHUB_OUTPUT
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
             echo ENVIRONMENT="none" >> $GITHUB_OUTPUT
             echo ANOTHER_THING="${{ secrets.ANOTHER_SECRET_NONE }}" >> $GITHUB_OUTPUT
@@ -83,6 +84,7 @@ jobs:
 
       - name: Print variable
         run: |
+          echo "Multiline variable: " ${{ needs.select_environment.outputs.JSON_VARIABLE }}
           echo "Before replacement: ${{ env.REPLACEABLE_VARIABLE }}"
 
       - name: Replace variable
