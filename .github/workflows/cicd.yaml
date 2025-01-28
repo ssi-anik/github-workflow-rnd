@@ -67,6 +67,7 @@ jobs:
     name: Building application - ${{ matrix.environment }}
     env:
       VARIABLE_A: 'A @ job-level-variable'
+      REPLACEABLE_VARIABLE: "this variable should be replaced"
     environment: ${{ matrix.environment }}
     needs:
       - select_environment
@@ -79,6 +80,18 @@ jobs:
     steps:
       - name: Checkout to codebase
         uses: actions/checkout@v4
+
+      - name: Print variable
+        run: |
+          echo "Before replacement: ${{ env.REPLACEABLE_VARIABLE }}"
+
+      - name: Replace variable
+        run: |
+          echo "REPLACEABLE_VARIABLE='this variable is replaced'" >> $GITHUB_ENV
+
+      - name: Reprint variable after changing
+        run: |
+          echo "After replacement: ${{ env.REPLACEABLE_VARIABLE }}"
 
       - name: Print another thing
         run: echo ${{ needs.select_environment.outputs.ANOTHER_THING }}
