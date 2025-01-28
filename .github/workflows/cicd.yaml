@@ -69,6 +69,7 @@ jobs:
     env:
       VARIABLE_A: 'A @ job-level-variable'
       REPLACEABLE_VARIABLE: "this variable should be replaced"
+      JSON_VARIABLE: ${{ needs.select_environment.outputs.JSON_VARIABLE }}
     environment: ${{ matrix.environment }}
     needs:
       - select_environment
@@ -84,7 +85,7 @@ jobs:
 
       - name: Print variable
         run: |
-          echo "Multiline variable: " ${{ needs.select_environment.outputs.JSON_VARIABLE }}
+          echo "Multiline variable: " ${{ env.JSON_VARIABLE }}
           echo "Before replacement: ${{ env.REPLACEABLE_VARIABLE }}"
 
       - name: Replace variable
