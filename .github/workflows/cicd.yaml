@@ -128,17 +128,33 @@ jobs:
           echo "secret key directly referenced: " ${{ secrets.SECRET_APP_KEY }}
           echo "var key directly referenced: " ${{ vars.VAR_APP_KEY }}
 
-      - name: multiple command
-        uses: appleboy/ssh-action@master
+      - name: Manual approval for production deployment
+        if: ${{ matrix.environment == 'production' }}
+        uses: trstringer/manual-approval@v1
         with:
-          host: ${{ secrets.SSH_HOST }}
-          port: ${{ secrets.SSH_PORT }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          username: ${{ secrets.SSH_USERNAME }}
-          script: |
-            whoami
-            ls -al
-            bash /home/anik/test.sh "hello world! anik"
+          secret: ${{ github.TOKEN }}
+          approvers: ssi-anik
+          minimum-approvals: 1
+          #issue-title: "Deploying v1.3.5 to prod from staging"
+          #issue-body: "Please approve or deny the deployment of version v1.3.5."
+          #exclude-workflow-initiator-as-approver: false
+          #additional-approved-words: ''
+          #additional-denied-words: ''
+
+      - name: deployment
+        run: echo "Deploying"
+
+#      - name: multiple command
+#        uses: appleboy/ssh-action@master
+#        with:
+#          host: ${{ secrets.SSH_HOST }}
+#          port: ${{ secrets.SSH_PORT }}
+#          key: ${{ secrets.SSH_PRIVATE_KEY }}
+#          username: ${{ secrets.SSH_USERNAME }}
+#          script: |
+#            whoami
+#            ls -al
+#            bash /home/anik/test.sh "hello world! anik"
 
 #      - name: Deploy - ${{ matrix.environment }}
 #        run: |
