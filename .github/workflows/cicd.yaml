@@ -61,7 +61,7 @@ jobs:
             echo ENVIRONMENT=dev >> $GITHUB_OUTPUT
             echo ANOTHER_THING="${{ secrets.ANOTHER_SECRET_DEV }}" >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref_name }}" == 'feature/feature-branch' ]]; then
-            echo ENVIRONMENT=dev >> $GITHUB_OUTPUT
+            echo ENVIRONMENT=production >> $GITHUB_OUTPUT
             echo ANOTHER_THING="${{ secrets.ANOTHER_SECRET_DEV }}" >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref_name }}" == 'uat' ]]; then
             echo ENVIRONMENT=uat >> $GITHUB_OUTPUT
