@@ -1,4 +1,6 @@
 name: Github CI/CD R&D
+permissions:
+  issues: write
 on:
   pull_request:
     # https://stackoverflow.com/a/70767151/2190689
